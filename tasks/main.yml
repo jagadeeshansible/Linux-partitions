@@ -22,7 +22,7 @@
     - name: Refresing facts to collect UUID
       setup:
       
-    - name: deuging the uuid
+    - name: Gathering newly generated UUID's
       set_fact:
         uuid_1: "{{ ansible_facts['devices']['nvme0n2']['partitions']['nvme0n2p1']['uuid'] }}"
         uuid_2: "{{ ansible_facts['devices']['nvme0n2']['partitions']['nvme0n2p2']['uuid'] }}"
@@ -34,8 +34,8 @@
         fstype: "{{ item.fstype }}"
         state: "{{ item.state }}"
       loop:
-        - { path: /jag-xfs, src: "{{ uuid_1 }}", fstype: xfs, state: mounted }
-        - { path: /jag-ext4, src: "{{ uuid_2 }}", fstype: ext4, state: mounted }
+        - { path: /folder-xfs, src: "{{ uuid_1 }}", fstype: xfs, state: mounted }
+        - { path: /folder-ext4, src: "{{ uuid_2 }}", fstype: ext4, state: mounted }
        
       register: mp
       when: fs is success
