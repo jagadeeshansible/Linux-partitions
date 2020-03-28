@@ -1,12 +1,12 @@
-Role Name
+Linux partitions
 =========
 
-A brief description of the role goes here.
+creating linux partitions using parted module and mount with uuid's
 
-Requirements
+Linux os
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+using RHEL8
 
 Role Variables
 --------------
@@ -23,9 +23,48 @@ Example Playbook
 
 Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+   ---
+# tasks file for partitions
+    - name: Creating partitions
+      parted:
+        device: "{{ item.device }}"
+        number: "{{ item.number }}"
+        state: "{{ item.state }}"
+        part_start: "{{ item.part_start }}"
+        part_end: "{{ item.part_end }}"
+      loop: "{{ partions }}"
+      register: parted
+      
+    - name: Creating Filesystem
+      filesystem:
+        dev: "{{ item.dev }}"
+        fstype: "{{ item.fstype }}"
+        force: yes
+      loop: "{{ filesystem }}"
+      register: fs
+      when: parted is success
+      
+    - name: Refresing facts to collect newly generated UUID's
+      setup:
+      
+    - name:Gathering UUID's and passed into variables
+      set_fact:
+        uuid_1: "{{ ansible_facts['devices']['nvme0n2']['partitions']['nvme0n2p1']['uuid'] }}"
+        uuid_2: "{{ ansible_facts['devices']['nvme0n2']['partitions']['nvme0n2p2']['uuid'] }}"
+    
+    - name: creainng mount points
+      mount:
+        path: "{{ item.path }}"
+        src: "UUID={{ item.src }}"
+        fstype: "{{ item.fstype }}"
+        state: "{{ item.state }}"
+      loop:
+        - { path: /folder-xfs, src: "{{ uuid_1 }}", fstype: xfs, state: mounted }
+        - { path: /folder-ext4, src: "{{ uuid_2 }}", fstype: ext4, state: mounted }
+       
+      register: mp
+      when: fs is success
+                           
 
 License
 -------
