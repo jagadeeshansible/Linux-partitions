@@ -41,7 +41,7 @@ Including an example of how to use your role (for instance, with variables passe
         fstype: "{{ item.fstype }}"
         force: yes
       loop: "{{ filesystem }}"
-      register: fs
+      register: filesystem
       when: parted is success
       
     - name: Refresing facts to collect newly generated UUID's
@@ -52,7 +52,7 @@ Including an example of how to use your role (for instance, with variables passe
         uuid_1: "{{ ansible_facts['devices']['nvme0n2']['partitions']['nvme0n2p1']['uuid'] }}"
         uuid_2: "{{ ansible_facts['devices']['nvme0n2']['partitions']['nvme0n2p2']['uuid'] }}"
     
-    - name: creainng mount points
+    - name: Creating mount points
       mount:
         path: "{{ item.path }}"
         src: "UUID={{ item.src }}"
@@ -62,8 +62,8 @@ Including an example of how to use your role (for instance, with variables passe
         - { path: /folder-xfs, src: "{{ uuid_1 }}", fstype: xfs, state: mounted }
         - { path: /folder-ext4, src: "{{ uuid_2 }}", fstype: ext4, state: mounted }
        
-      register: mp
-      when: fs is success
+      register: mountpoint
+      when: filesystem is success
                            
 
 License
