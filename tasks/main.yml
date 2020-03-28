@@ -36,7 +36,6 @@
       loop:
         - { path: /folder-xfs, src: "{{ uuid_1 }}", fstype: xfs, state: mounted }
         - { path: /folder-ext4, src: "{{ uuid_2 }}", fstype: ext4, state: mounted }
-       
       register: mp
       when: fs is success
                            
