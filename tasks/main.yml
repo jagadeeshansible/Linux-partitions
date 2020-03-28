@@ -1,0 +1,42 @@
+---
+# tasks file for partitions
+    - name: creating partitions
+      parted:
+        device: "{{ item.device }}"
+        number: "{{ item.number }}"
+        state: "{{ item.state }}"
+        part_start: "{{ item.part_start }}"
+        part_end: "{{ item.part_end }}"
+      loop: "{{ partions }}"
+      register: parted
+      
+    - name: creating filesystem
+      filesystem:
+        dev: "{{ item.dev }}"
+        fstype: "{{ item.fstype }}"
+        force: yes
+      loop: "{{ filesystem }}"
+      register: fs
+      when: parted is success
+      
+    - name: Refresing facts to collect UUID
+      setup:
+      
+    - name: deuging the uuid
+      set_fact:
+        uuid_1: "{{ ansible_facts['devices']['nvme0n2']['partitions']['nvme0n2p1']['uuid'] }}"
+        uuid_2: "{{ ansible_facts['devices']['nvme0n2']['partitions']['nvme0n2p2']['uuid'] }}"
+    
+    - name: creainng mount points
+      mount:
+        path: "{{ item.path }}"
+        src: "UUID={{ item.src }}"
+        fstype: "{{ item.fstype }}"
+        state: "{{ item.state }}"
+      loop:
+        - { path: /jag-xfs, src: "{{ uuid_1 }}", fstype: xfs, state: mounted }
+        - { path: /jag-ext4, src: "{{ uuid_2 }}", fstype: ext4, state: mounted }
+       
+      register: mp
+      when: fs is success
+                           
