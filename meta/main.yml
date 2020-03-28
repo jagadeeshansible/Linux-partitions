@@ -1,6 +1,6 @@
 galaxy_info:
   author: Jagadeesh Athikayala
-  description: Creating partitions using ansible roles and mount with UUID's
+  description: Creating partitions using ansible roles and mount with uuid's
   company: your company (optional)
 
   # If the issue tracker for your role is not on github, uncomment the
