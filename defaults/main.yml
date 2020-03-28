@@ -6,18 +6,17 @@ partions:
     state: present
     part_start: 1MB
     part_end: 1GB
-   
+    
   - device: /dev/nvme0n2
     number: 2
     state: present
     part_start: 1000MB
     part_end: 2GB
-   
-   
+    
 filesystem:
   - dev: /dev/nvme0n2p1
     fstype: xfs
-   
+    
   - dev: /dev/nvme0n2p2
     fstype: ext4
    
