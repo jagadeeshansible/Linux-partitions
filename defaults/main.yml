@@ -21,14 +21,5 @@ filesystem:
   - dev: /dev/nvme0n2p2
     fstype: ext4
    
-mountpoint:
-  - path: /jag-xfs
-    src: /dev/nvme0n2p1
-    fstype: xfs
-    state: mounted
-   
-  - path: /jag-ext4
-    src: /dev/nvme0n2p2
-    fstype: ext4
-    state: mounted
+
 
