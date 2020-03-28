@@ -3,7 +3,7 @@ Linux partitions
 
 creating linux partitions using parted module and mount with uuid's
 
-Linux os
+Linux Base os
 ------------
 
 using RHEL8
